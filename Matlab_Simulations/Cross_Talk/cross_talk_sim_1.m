@@ -1,31 +1,70 @@
-trace1 = traceLine;
-trace1.Length = [10 5*sqrt(2) 10 5*sqrt(2) 10]*1e-3;
-trace1.Angle  = [0 45 0 -45 0];
-trace1.Width  = 3e-3;
-trace1.Corner = "Miter";
-trace2 = copy(trace1);
-trace2.Length = [11 6*sqrt(2) 6 6*sqrt(2) 11]*1e-3;
-trace2 = translate(trace2, [0,-5e-3,0]);
-trace = trace1 + trace2 ;
+%{
+Cross talk between traces
+
+
+%}
+%{
+Paths and constrains 
+%}
+path_top_layer_gbr_file     = '../../High_Amp_PCB_Designs/KiCAD_Design/High_AMP_BLDC_Control/gbr/High_AMP_BLDC_Control-F_Cu.gtl';
+path_button_layer_gbr_file  = '../../High_Amp_PCB_Designs/KiCAD_Design/High_AMP_BLDC_Control/gbr/High_AMP_BLDC_Control-B_Cu.gbl';
+
+% -----------------------------------------------------------
+
+
+
+% PCB Properties ---------------------------------------------
+pcb_stackup_comp       = stackUp;
+pcb_read_comp          = PCBReader('StackUp',pcb_stackup_comp);
+complete_pcb_comp      = pcbComponent;
+
+
+
+% Gerber read-> PCB Reader component 
+pcb_stackup_comp.Layer1             = dielectric('Teflon');
+pcb_stackup_comp.Layer1.Thickness   = 0.001;
+pcb_stackup_comp.Layer3             = dielectric('Teflon');
+pcb_stackup_comp.Layer5             = dielectric('Teflon');
+
+pcb_stackup_comp.Layer2             = path_top_layer_gbr_file;
+pcb_stackup_comp.Layer4             = path_button_layer_gbr_file;
+
+pcb_read_comp = PCBReader('StackUp',pcb_stackup_comp);
+
+
+
+% Pcb read ocmponent to PCBcomponent conversion 
+complete_pcb_comp = pcbComponent(pcb_read_comp);
 
 figure(1)
-show(trace);
+show(complete_pcb_comp)
 
-pcb = pcbComponent;
-d = dielectric("Teflon");
-d.Thickness = pcb.BoardThickness;
-groundplane = traceRectangular(Length=40e-3,Width=40e-3,Center=[40e-3/2,0]);
-pcb.Layers = {trace,d,groundplane};
-pcb.FeedLocations = [0,0,1,3;40e-3,0,1,3;40e-3,-5e-3,1,3;0e-3,-5e-3,1,3];
-pcb.BoardShape = groundplane;
-pcb.FeedDiameter = trace1.Width/2;
+%Feeding and other signal properties
+% complete_pcb_comp.FeedLocations     = [0,0,1,3;40e-3,0,1,3;40e-3,-10e-3,1,3;0e-3,-10e-3,1,3];
+% complete_pcb_comp.FeedDiameter      = trace_1.Width/2;
 
-figure(2)
-show(pcb)
+% figure(4)
+% show(s)
+pcb_stackup_comp
+complete_pcb_comp
+
+
+
+% Analysis part ===============================================
 
 figure(3)
-current(pcb,1e9,scale="log");
+current(complete_pcb_comp,1e9,scale="log");
 
-% spar = sparameters(pcb,linspace(1e3,10e3,51));
-% figure(4)
-% rfplot(spar,2:4,1)
+
+
+
+
+
+
+
+
+
+
+% s=sparameters(pcb,linspace(2e3,5e9,20));
+% 
+% rfplot(s)

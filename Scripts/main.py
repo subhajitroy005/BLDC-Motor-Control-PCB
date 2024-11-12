@@ -1,4 +1,6 @@
-from pcbnew import *
+
+import pcbnew
+#from pcbnew import *
 
 
 # Board Path
