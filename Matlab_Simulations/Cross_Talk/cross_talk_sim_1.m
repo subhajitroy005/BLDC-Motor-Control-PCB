@@ -27,28 +27,29 @@ pcb_stackup_comp.Layer3             = dielectric('Teflon');
 % pcb_stackup_comp.Layer5             = dielectric('Teflon');
 
 pcb_stackup_comp.Layer2             = path_top_layer_gbr_file;
-pcb_stackup_comp.Layer4             = path_button_layer_gbr_file;
+% pcb_stackup_comp.Layer4             = path_button_layer_gbr_file;
 
 pcb_read_comp = PCBReader('StackUp',pcb_stackup_comp);
 
-
+pcb_shape_component = shapes(pcb_read_comp);
+% figure(1)
+% show(pcb_shape_component)
 
 % Pcb read ocmponent to PCBcomponent conversion 
 complete_pcb_comp = pcbComponent(pcb_read_comp);
+complete_pcb_comp.BoardThickness = 4e-3;
 
-figure(1)
-hold
-show(complete_pcb_comp)
 
 %Feeding and other signal properties
-complete_pcb_comp.FeedLocation=       [83.1 , -90.6721, 2;
-                                       83.2 , -79.4419, 2;
-                                       89.7 , -90.8075, 2;
-                                       89.4 , -80.1215, 2];
-% complete_pcb_comp.FeedDiameter      = trace_1.Width/2;
+complete_pcb_comp.FeedLocations =      [83.1e-3 , -79.21e-3, 2;
+                                        89.4e-3 , -80.02e-3, 2;
+                                        83.1e-3 , -90.98e-3, 2;
+                                        89.4e-3 , -91.34e-3, 2];
+complete_pcb_comp.FeedDiameter      =   2e-3;
 
-% figure(4)
-% show(s)
+complete_pcb_comp
+figure(4)
+show(complete_pcb_comp)
 
 
 
