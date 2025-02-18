@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "FOOTPRINT")(type "KiCad")(uri "/home/subhajit-roy/Personal_Projects/DB_Files/KiCAD_DB/FOOTPRINT")(options "")(descr ""))
+)
